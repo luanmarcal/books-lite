@@ -1,55 +1,29 @@
 import { X, Trash, Edit } from "lucide-react";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
-import { useEffect, useState } from "react";
-
-export interface BookDetailsInterface {
-  setRoute?: (route: string) => void;
-  id: number;
-  title: string;
-  authors: [string] | string;
-  isbn: number;
-  edition: string;
-  year: number;
-  publisher: string;
-  pages: number;
-  purchaseLink: string;
-  coverUrl: string;
-}
+import { useState } from "react";
+import {
+  BookDataInterface,
+  BookDetailsProps,
+  defaultBookDetails,
+} from "@/types/book-interfaces";
 
 export default function BookDetails({
   createBook,
   setCreateBook,
   setRoute,
-  bookList,
   setBookList,
+  bookList,
   BookDetails,
-}: {
-  createBook?: boolean;
-  setCreateBook: (createBook: boolean) => void;
-  setRoute: (route: string) => void;
-  setBookList: (bookList: BookDetailsInterface[]) => void;
-  bookList: BookDetailsInterface[];
-  BookDetails: BookDetailsInterface | undefined;
-}) {
+}: BookDetailsProps) {
   const [onEdit, setOnEdit] = useState(false);
   const [titleBook] = useState(BookDetails?.title);
 
-  const [bookDetails, setBookDetails] = useState({
-    id: BookDetails?.id ?? 0,
-    title: BookDetails?.title ?? "",
-    authors: BookDetails?.authors ?? "",
-    isbn: BookDetails?.isbn ?? 0,
-    edition: BookDetails?.edition ?? "",
-    year: BookDetails?.year ?? 0,
-    publisher: BookDetails?.publisher ?? "",
-    pages: BookDetails?.pages ?? 0,
-    purchaseLink: BookDetails?.purchaseLink ?? "",
-    coverUrl: BookDetails?.coverUrl ?? "",
-  });
+  const [bookDetails, setBookDetails] = useState<BookDataInterface>(
+    BookDetails || defaultBookDetails
+  );
 
   const handleDeleteButton = async () => {
-    // Implement delete functionality here
     console.log("Delete button clicked");
     const updatedBookList = bookList.filter(
       (book) => book.id !== bookDetails.id
@@ -72,14 +46,11 @@ export default function BookDetails({
   };
 
   const handleEditButton = () => {
-    // Implement edit functionality here
     console.log("Edit button clicked");
     setOnEdit(!onEdit);
-    // setRoute("book-list");
   };
 
   const handleBackButton = () => {
-    // Implement back functionality here
     console.log("Back button clicked");
     setRoute("book-list");
   };
@@ -92,7 +63,6 @@ export default function BookDetails({
   };
 
   const handleConfirmEditButton = async () => {
-    // Implement confirm edit functionality here
     const updatedBookList = bookList.filter(
       (book) => book.id !== bookDetails.id
     );
@@ -114,17 +84,12 @@ export default function BookDetails({
       throw new Error("Network response was not ok");
     }
 
-    console.log("Book details updatedAAAAAAAAAAA:", updatedBookList);
     setRoute("book-list");
     setBookList(updatedBookList);
 
     setCreateBook(false);
     setOnEdit(false);
   };
-
-  useEffect(() => {
-    console.log("Book details updated:", bookDetails);
-  }, [bookDetails]);
 
   return (
     <>
@@ -177,13 +142,11 @@ export default function BookDetails({
           <div className="flex flex-col my-2">
             {!createBook ? (
               <div className="w-full h-full flex items-center justify-center max-h-[10vh] rounded-2xl p-4">
-                {bookDetails.coverUrl ? (
-                  <img
-                    src={bookDetails.coverUrl}
-                    alt="Capa do livro"
-                    className="rounded-2xl max-h-[8vh] max-w-[7vw] mr-2 border-2 border-white shadow-lg"
-                  />
-                ) : null}
+                <img
+                  src={bookDetails.coverUrl}
+                  alt="Capa do livro"
+                  className="rounded-2xl max-h-[8vh] max-w-[7vw] mr-2 border-2 border-white shadow-lg"
+                />
 
                 <p className="font-bold text-lg overflow-hidden text-ellipsis whitespace-nowrap font-roboto">
                   {titleBook}

@@ -13,7 +13,6 @@ app.use(express.json());
 
 // routes
 app.get("/", (req: any, res: any) => {
-  // console.log("get /");
   res.send(`backend is running on port ${port}`);
 });
 
@@ -27,50 +26,6 @@ app.get("/posts", (req: any, res: any) => {
     res.status(404).send({ message: "File not found" });
   }
 });
-
-// app.post("/posts", (req: any, res: any) => {
-//   const {
-//     id,
-//     title,
-//     authors,
-//     isbn,
-//     edition,
-//     year,
-//     publisher,
-//     pages,
-//     purchaseLink,
-//     coverUrl,
-//   } = req.body;
-
-//   if (id) {
-//     let posts = [];
-//     if (fs.existsSync(filePath)) {
-//       const fileData = fs.readFileSync(filePath, "utf-8");
-//       posts = JSON.parse(fileData);
-//     } else {
-//       fs.writeFileSync(filePath, JSON.stringify([]), "utf-8");
-//     }
-
-//     posts.push({
-//       id,
-//       title,
-//       authors,
-//       isbn,
-//       edition,
-//       year,
-//       publisher,
-//       pages,
-//       purchaseLink,
-//       coverUrl,
-//     });
-
-//     fs.writeFileSync(filePath, JSON.stringify(posts, null, 2), "utf-8");
-//     console.log(posts);
-//     res.status(201).send({ message: "Post created successfully", posts });
-//   } else {
-//     res.status(400).send({ message: "Post content is required" });
-//   }
-// });
 
 app.post("/posts", (req: any, res: any) => {
   if (!req.body) {
