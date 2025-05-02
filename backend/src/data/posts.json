@@ -1,1 +1,14 @@
-[]
+[
+  {
+    "id": 852,
+    "title": "Harry Potter e a Pedra Filosofal",
+    "authors": "J.K. Rowling",
+    "isbn": "8532530788",
+    "edition": "1ª edição",
+    "year": "2017",
+    "publisher": "Rocco",
+    "pages": "208",
+    "purchaseLink": "https://www.amazon.com.br/Harry-Potter-Pedra-Filosofal-Rowling/dp/8532530788",
+    "coverUrl": "https://m.media-amazon.com/images/I/81ibfYk4qmL._SY425_.jpg"
+  }
+]
