@@ -1,67 +1,50 @@
 const express = require("express");
 const cors = require("cors");
+const axios = require("axios");
 
 const app = express();
 const port = 4000;
 
-const fs = require("fs");
-const path = require("path");
-const filePath = path.join(__dirname, "data/posts.json");
-
 app.use(cors());
 app.use(express.json());
+
+let cachedBooks: any[] = [];
+let lastFetch = 0;
+const CACHE_DURATION = 5 * 60 * 1000;
 
 // routes
 app.get("/", (req: any, res: any) => {
   res.send(`backend is running on port ${port}`);
 });
 
-app.get("/posts", (req: any, res: any) => {
-  if (fs.existsSync(filePath)) {
-    const fileData = fs.readFileSync(filePath, "utf-8");
-    const filePosts = JSON.parse(fileData);
+app.get("/books", async (req: any, res: any) => {
+  const now = Date.now();
 
-    res.status(200).send(filePosts);
-  } else {
-    res.status(404).send({ message: "File not found" });
-  }
-});
-
-app.post("/posts", (req: any, res: any) => {
-  if (!req.body) {
-    res.status(400).send({ message: "Post content is required" });
-    return;
+  // Check if the cache is still valid
+  if (cachedBooks.length > 0 && now - lastFetch < CACHE_DURATION) {
+    return res.json(cachedBooks);
   }
 
-  const posts = req.body;
+  const books = await axios.get(
+    "https://potterapi-fedeperin.vercel.app/pt/books"
+  );
 
-  console.log("req.body", req.body);
-  fs.writeFileSync(filePath, JSON.stringify(posts, null, 2), "utf-8");
-  res.status(201).send({ message: "Post created successfully", posts });
-});
+  const data = books.data.map((book: any) => ({
+    number: book.number,
+    title: book.title,
+    originalTitle: book.originalTitle,
+    releaseDate: book.releaseDate,
+    description: book.description,
+    pages: book.pages,
+    cover: book.cover,
+  }));
 
-app.delete("/posts", (req: any, res: any) => {
-  const postId = req.body.id;
+  cachedBooks = data;
+  lastFetch = now;
 
-  if (postId) {
-    let posts = [];
-    if (fs.existsSync(filePath)) {
-      const fileData = fs.readFileSync(filePath, "utf-8");
-      posts = JSON.parse(fileData);
-    }
-    console.log(posts);
-    posts.forEach((p: any, index: number) => {
-      if (p.id === postId) {
-        posts.splice(index, 1);
-      }
-    });
-    console.log(posts);
-    fs.writeFileSync(filePath, JSON.stringify(posts, null, 2), "utf-8");
+  console.log("Dados atualizados da API externa.");
 
-    res.status(200).send({ message: "Post deleted successfully" });
-  } else {
-    res.status(400).send({ message: "Post content is required" });
-  }
+  res.json(data);
 });
 
 app.listen(port, () => {
