@@ -76,11 +76,19 @@ export default function BookDetails({
               </div>
 
               <div>
-                <label className="font-roboto font-bold">Ano:</label>
+                <label className="font-roboto font-bold">
+                  Data de Lançamento:
+                </label>
                 <Input
                   type="text"
                   disabled={true}
-                  value={localBookDetails.releaseDate}
+                  value={new Date(
+                    localBookDetails.releaseDate
+                  ).toLocaleDateString("pt-BR", {
+                    year: "numeric",
+                    month: "2-digit",
+                    day: "2-digit",
+                  })}
                   className="my-1"
                 />
               </div>
