@@ -1,41 +1,30 @@
 export interface BookDataInterface {
-  id: number;
+  number: number;
   title: string;
-  authors: [string] | string;
-  isbn: number;
-  edition: string;
-  year: number;
-  publisher: string;
+  originalTitle: string;
+  releaseDate: string;
+  description: string;
   pages: number;
-  purchaseLink: string;
-  coverUrl: string;
+  cover: string;
 }
 
 export interface BookListProps {
-  setCreateBook: (createBook: boolean) => void;
   setBook: (book: number) => void;
   setRoute: (route: string) => void;
   ListBooksAPI: BookDataInterface[];
 }
 
 export interface BookDetailsProps {
-  createBook?: boolean;
-  setCreateBook: (createBook: boolean) => void;
   setRoute: (route: string) => void;
-  setBookList: (bookList: BookDataInterface[]) => void;
-  bookList: BookDataInterface[];
-  BookDetails: BookDataInterface | undefined;
+  bookDetails: BookDataInterface | undefined;
 }
 
 export const defaultBookDetails: BookDataInterface = {
-  id: 0,
+  number: 0,
   title: "",
-  authors: [""],
-  isbn: 0,
-  edition: "",
-  year: 0,
-  publisher: "",
+  originalTitle: "",
+  releaseDate: "",
+  description: "",
   pages: 0,
-  purchaseLink: "",
-  coverUrl: "",
+  cover: "",
 };

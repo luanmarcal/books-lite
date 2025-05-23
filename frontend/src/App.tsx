@@ -13,7 +13,6 @@ import { defaultBookDetails } from "./types/book-interfaces";
 function App() {
   const [route, setRoute] = useState("home-page");
   const [idBook, setIdBook] = useState(0);
-  const [createBook, setCreateBook] = useState(false);
 
   const [screen, setScreen] = useState<React.ReactNode>(null);
   const [listBooksAPI, setListBooksAPI] = useState<BookDataInterface[]>([]);
@@ -21,7 +20,7 @@ function App() {
   useEffect(() => {
     const fetchBooks = async () => {
       try {
-        const response = await fetch("http://localhost:4000/posts", {
+        const response = await fetch("http://localhost:4000/books", {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
@@ -50,7 +49,6 @@ function App() {
       case "book-list":
         setScreen(
           <BookList
-            setCreateBook={setCreateBook}
             setBook={setIdBook}
             setRoute={setRoute}
             ListBooksAPI={listBooksAPI}
@@ -60,15 +58,10 @@ function App() {
       case "book-details":
         setScreen(
           <BookDetails
-            createBook={createBook}
-            setCreateBook={setCreateBook}
             setRoute={setRoute}
-            setBookList={setListBooksAPI}
-            bookList={listBooksAPI}
-            BookDetails={
-              createBook
-                ? defaultBookDetails
-                : listBooksAPI.find((book) => book.id === idBook)
+            bookDetails={
+              listBooksAPI.find((book) => book.number === idBook) ||
+              defaultBookDetails
             }
           />
         );
@@ -77,7 +70,7 @@ function App() {
         setScreen(<NotFoundPage setRoute={setRoute} />);
         break;
     }
-  }, [route, listBooksAPI, idBook, createBook]);
+  }, [route, listBooksAPI, idBook]);
 
   return (
     <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
